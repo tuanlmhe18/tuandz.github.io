@@ -3,48 +3,197 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lì Xì Tuấn Đẹp Trai</title>
+    <title>Lì Xì Tết 2024</title>
     <style>
-        body { font-family: Arial, sans-serif; background-color: #b30000; color: #ffcc00; text-align: center; padding: 20px; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 15px; max-width: 500px; margin: 20px auto; }
-        .bao-li-xi { background-color: #ffcc00; color: #b30000; border: 2px solid white; height: 100px; display: flex; align-items: center; justify-content: center; font-weight: bold; cursor: pointer; border-radius: 8px; }
-        .bao-li-xi:hover { transform: scale(1.05); }
-        .bao-li-xi.da-mo { background-color: white; color: red; cursor: default; }
-        .popup { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); display: none; align-items: center; justify-content: center; }
-        .popup-content { background: white; padding: 30px; border-radius: 10px; color: red; text-align: center; }
-        .tien { font-size: 3rem; font-weight: bold; margin: 20px 0; }
-        button { background: red; color: white; padding: 10px 20px; border: none; cursor: pointer; border-radius: 5px; }
+        /* CẤU HÌNH GIAO DIỆN */
+        body {
+            font-family: 'Arial', sans-serif;
+            /* Hình nền Tết đẹp */
+            background: url('https://images.unsplash.com/photo-1613829704847-8b369ee90a33?q=80&w=2070&auto=format&fit=crop') no-repeat center center fixed;
+            background-size: cover;
+            color: #fff;
+            text-align: center;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        /* Lớp phủ mờ để làm nổi bật nội dung trên nền ảnh */
+        body::before {
+            content: ''; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(179, 0, 0, 0.7); /* Màu đỏ mờ */
+            z-index: -1;
+        }
+
+        h1 {
+            margin-bottom: 10px;
+            font-size: 2.5rem;
+            text-shadow: 2px 2px 4px #000;
+            color: #ffcc00; /* Vàng kim */
+        }
+        p { font-size: 1.2rem; text-shadow: 1px 1px 2px #000; }
+
+        /* Lưới 5 ô */
+        .grid {
+            display: grid;
+            /* Tự động chia cột, tối đa 5 cột */
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 20px;
+            max-width: 800px;
+            margin: 40px auto;
+        }
+
+        .bao-li-xi {
+            background: linear-gradient(45deg, #ffcc00, #ffd700);
+            color: #b30000;
+            border: 3px solid #fff;
+            border-radius: 15px;
+            height: 140px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1.3rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* Hiệu ứng lấp lánh nhẹ khi di chuột */
+        .bao-li-xi:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 10px 20px rgba(255, 204, 0, 0.4);
+        }
+
+        .bao-li-xi.da-mo {
+            background: #fff;
+            color: #b30000;
+            cursor: default;
+            transform: none;
+            box-shadow: none;
+            opacity: 0.8;
+        }
+
+        /* Popup kết quả */
+        .popup {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.85);
+            display: none;
+            align-items: center; justify-content: center;
+            z-index: 1000;
+            animation: fadeIn 0.3s;
+        }
+        .popup-content {
+            background: linear-gradient(to bottom, #fff, #fff5cc);
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            color: #b30000;
+            border: 4px solid #ffcc00;
+            box-shadow: 0 0 30px rgba(255, 204, 0, 0.5);
+            animation: zoomIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            max-width: 90%;
+        }
+        .popup-content h2 { margin-top: 0; color: #d60000; }
+        
+        /* Ảnh tiền trong popup */
+        .anh-tien {
+            max-width: 100%;
+            height: auto;
+            max-height: 300px;
+            display: block;
+            margin: 20px auto;
+            border-radius: 5px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        button {
+            background: linear-gradient(to right, #d60000, #b30000);
+            color: white; border: none;
+            padding: 12px 30px; font-size: 1.1rem;
+            border-radius: 50px; cursor: pointer;
+            transition: transform 0.2s;
+            font-weight: bold;
+        }
+        button:hover { transform: scale(1.1); background: #ff0000; }
+
+        @keyframes fadeIn { from {opacity: 0;} to {opacity: 1;} }
+        @keyframes zoomIn { from {transform: scale(0.5);} to {transform: scale(1);} }
     </style>
 </head>
 <body>
-    <h1>🧧 Lì Xì Tuấn Đẹp Trai 🧧</h1>
-    <p>Chọn bao để nhận lộc!</p>
+
+    <h1>🧧 Lộc Xuân Giáp Thìn 🧧</h1>
+    <p>Chọn một bao lì xì để nhận may mắn đầu năm!</p>
+
     <div class="grid" id="khung"></div>
+
     <div class="popup" id="ketqua">
         <div class="popup-content">
-            <h2>Chúc Mừng!</h2>
-            <div class="tien" id="giatri"></div>
-            <button onclick="dong()">Nhận Lộc</button>
+            <h2>🎉 Chúc Mừng Năm Mới! 🎉</h2>
+            <p>Bạn đã nhận được lộc:</p>
+            <img id="anh-ket-qua" class="anh-tien" src="" alt="Tiền lì xì">
+            <button onclick="dong()">Nhận Lộc Ngay</button>
         </div>
     </div>
+
     <script>
-        const tien = ["5k", "10k", "20k", "50k", "100k"];
+        // CẤU HÌNH DANH SÁCH TIỀN VÀ LINK ẢNH THẬT
+        // (Bạn có thể thay link ảnh khác nếu muốn)
+        const danhSachTien = [
+            { giá_trị: "5k", hình_ảnh: "https://upload.wikimedia.org/wikipedia/vi/thumb/e/e5/5000_dong.jpg/640px-5000_dong.jpg" },
+            { giá_trị: "10k", hình_ảnh: "https://upload.wikimedia.org/wikipedia/vi/thumb/3/30/10000_dong.jpg/640px-10000_dong.jpg" },
+            { giá_trị: "20k", hình_ảnh: "https://upload.wikimedia.org/wikipedia/vi/thumb/9/95/20000_dong.jpg/640px-20000_dong.jpg" },
+            { giá_trị: "50k", hình_ảnh: "https://upload.wikimedia.org/wikipedia/vi/thumb/c/c9/50000_dong.jpg/640px-50000_dong.jpg" },
+            { giá_trị: "100k", hình_ảnh: "https://upload.wikimedia.org/wikipedia/vi/thumb/7/7c/100000_dong.jpg/640px-100000_dong.jpg" }
+        ];
+
+        // Hàm trộn ngẫu nhiên danh sách (Fisher-Yates shuffle)
+        function tronDanhSach(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        // Trộn danh sách tiền trước khi tạo ô
+        const danhSachDaTron = tronDanhSach([...danhSachTien]);
         const khung = document.getElementById('khung');
-        for (let i = 1; i <= 12; i++) {
+        const popup = document.getElementById('ketqua');
+        const anhKetQua = document.getElementById('anh-ket-qua');
+
+        // Tạo 5 ô lì xì
+        for (let i = 0; i < 5; i++) {
             let bao = document.createElement('div');
             bao.className = 'bao-li-xi';
-            bao.innerText = "Bao " + i;
+            bao.innerText = "Lì Xì " + (i + 1);
+            
+            // Gắn dữ liệu tiền đã trộn vào từng ô
+            bao.dataset.giatri = danhSachDaTron[i].giá_trị;
+            bao.dataset.hinhanh = danhSachDaTron[i].hình_ảnh;
+
             bao.onclick = function() {
                 if (this.classList.contains('da-mo')) return;
-                let random = tien[Math.floor(Math.random() * tien.length)];
-                document.getElementById('giatri').innerText = random;
-                document.getElementById('ketqua').style.display = 'flex';
+                
+                // Lấy thông tin từ ô được chọn
+                const giaTri = this.dataset.giatri;
+                const hinhAnh = this.dataset.hinhanh;
+
+                // Hiển thị lên popup
+                anhKetQua.src = hinhAnh;
+                popup.style.display = 'flex';
+                
+                // Đánh dấu đã mở
                 this.classList.add('da-mo');
-                this.innerText = random;
+                this.innerText = giaTri;
             };
             khung.appendChild(bao);
         }
-        function dong() { document.getElementById('ketqua').style.display = 'none'; }
+
+        function dong() { popup.style.display = 'none'; }
     </script>
+
 </body>
 </html>
