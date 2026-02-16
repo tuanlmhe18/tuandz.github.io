@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lì Xì Tuấn Đẹp Trai</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #b30000; color: #ffcc00; text-align: center; padding: 20px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 15px; max-width: 500px; margin: 20px auto; }
+        .bao-li-xi { background-color: #ffcc00; color: #b30000; border: 2px solid white; height: 100px; display: flex; align-items: center; justify-content: center; font-weight: bold; cursor: pointer; border-radius: 8px; }
+        .bao-li-xi:hover { transform: scale(1.05); }
+        .bao-li-xi.da-mo { background-color: white; color: red; cursor: default; }
+        .popup { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); display: none; align-items: center; justify-content: center; }
+        .popup-content { background: white; padding: 30px; border-radius: 10px; color: red; text-align: center; }
+        .tien { font-size: 3rem; font-weight: bold; margin: 20px 0; }
+        button { background: red; color: white; padding: 10px 20px; border: none; cursor: pointer; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <h1>🧧 Lì Xì Tuấn Đẹp Trai 🧧</h1>
+    <p>Chọn bao để nhận lộc!</p>
+    <div class="grid" id="khung"></div>
+    <div class="popup" id="ketqua">
+        <div class="popup-content">
+            <h2>Chúc Mừng!</h2>
+            <div class="tien" id="giatri"></div>
+            <button onclick="dong()">Nhận Lộc</button>
+        </div>
+    </div>
+    <script>
+        const tien = ["5k", "10k", "20k", "50k", "100k"];
+        const khung = document.getElementById('khung');
+        for (let i = 1; i <= 12; i++) {
+            let bao = document.createElement('div');
+            bao.className = 'bao-li-xi';
+            bao.innerText = "Bao " + i;
+            bao.onclick = function() {
+                if (this.classList.contains('da-mo')) return;
+                let random = tien[Math.floor(Math.random() * tien.length)];
+                document.getElementById('giatri').innerText = random;
+                document.getElementById('ketqua').style.display = 'flex';
+                this.classList.add('da-mo');
+                this.innerText = random;
+            };
+            khung.appendChild(bao);
+        }
+        function dong() { document.getElementById('ketqua').style.display = 'none'; }
+    </script>
+</body>
+</html>
