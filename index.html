@@ -30,8 +30,9 @@
             border-radius: 30px;
             margin-bottom: 20px;
             border: 1px solid #ffcc00;
+            display: flex; align-items: center; gap: 10px;
         }
-        .music-control label { font-weight: bold; margin-right: 10px; color: #ffcc00; }
+        .music-control label { font-weight: bold; color: #ffcc00; }
         .music-control select {
             padding: 8px; border-radius: 20px; border: none;
             background: #fff; color: #d32f2f; font-weight: bold; cursor: pointer;
@@ -83,8 +84,15 @@
             cursor: pointer; font-weight: bold;
         }
 
+        /* Dòng chữ nhắc nhở click nếu nhạc chưa chạy */
+        #click-hint {
+            color: #ffccbc; font-size: 0.9rem; margin-top: -10px; margin-bottom: 20px;
+            display: none; font-style: italic; animation: nhapNhay 1s infinite;
+        }
+
         @keyframes hienRa { from {opacity: 0;} to {opacity: 1;} }
         @keyframes phongTo { from {transform: scale(0.5);} to {transform: scale(1);} }
+        @keyframes nhapNhay { 0% {opacity: 0.5;} 50% {opacity: 1;} 100% {opacity: 0.5;} }
     </style>
 </head>
 <body>
@@ -92,14 +100,15 @@
     <h1>🧧 Lì Xì Tuanlm 🧧</h1>
     
     <div class="music-control">
-        <label>🎵 Chọn nhạc nền:</label>
-        <select id="chon-bai-hat">
+        <label>🎵 Nhạc nền:</label>
+        <select id="chon-bai-hat" onchange="doiBaiHat()">
             <option value="./nhac1.mp3">Bài 1: Sôi Động 💃</option>
             <option value="./nhac2.mp3">Bài 2: Nhẹ Nhàng 🌸</option>
         </select>
     </div>
+    <div id="click-hint">👉 Chạm vào màn hình để bật nhạc!</div>
 
-    <p>Chọn bao để nhận lộc + quẩy nhạc nào!</p>
+    <p>Chọn bao để nhận lộc đầu năm!</p>
 
     <div class="grid" id="khung-bao"></div>
 
@@ -111,10 +120,12 @@
         </div>
     </div>
 
-    <audio id="may-phat-nhac"></audio>
+    <audio id="nhac-nen" loop autoplay>
+        <source src="./nhac1.mp3" type="audio/mpeg">
+    </audio>
 
     <script>
-        // CẤU HÌNH DANH SÁCH ẢNH TIỀN (Giữ nguyên file bạn đã tải)
+        // --- 1. CẤU HÌNH DATA ---
         const danhSachTien = [
             { menhGia: "5k", img: "./5k.jpg" },
             { menhGia: "10k", img: "./10k.jpg" },
@@ -123,16 +134,45 @@
             { menhGia: "100k", img: "./100k.jpg" }
         ];
 
+        // --- 2. XỬ LÝ ÂM THANH TỰ ĐỘNG ---
+        const audio = document.getElementById('nhac-nen');
+        const clickHint = document.getElementById('click-hint');
+
+        // Hàm thử phát nhạc
+        function playMusic() {
+            audio.play().then(() => {
+                // Nếu phát thành công -> Ẩn dòng nhắc nhở
+                clickHint.style.display = 'none';
+            }).catch(() => {
+                // Nếu bị chặn -> Hiện dòng nhắc nhở
+                clickHint.style.display = 'block';
+            });
+        }
+
+        // Thử phát ngay khi web tải xong
+        window.addEventListener('load', playMusic);
+
+        // Nếu bị chặn, chờ cú click đầu tiên để phát
+        document.addEventListener('click', () => {
+            if (audio.paused) {
+                playMusic();
+            }
+        });
+
+        // Hàm đổi bài hát khi chọn menu
+        function doiBaiHat() {
+            const select = document.getElementById('chon-bai-hat');
+            audio.src = select.value;
+            playMusic(); // Phát bài mới ngay
+        }
+
+        // --- 3. XỬ LÝ GAME LÌ XÌ ---
         function tronMang(array) { return array.sort(() => Math.random() - 0.5); }
         
         const tienDaTron = tronMang([...danhSachTien]);
         const khung = document.getElementById('khung-bao');
         const popup = document.getElementById('popup');
         const anhTien = document.getElementById('anh-tien-that');
-        
-        // Lấy thẻ Audio và thẻ Chọn Bài Hát
-        const audioPlayer = document.getElementById('may-phat-nhac');
-        const musicSelector = document.getElementById('chon-bai-hat');
 
         for (let i = 0; i < 5; i++) {
             let bao = document.createElement('div');
@@ -143,14 +183,7 @@
             bao.onclick = function() {
                 if (this.classList.contains('da-mo')) return;
 
-                // 1. XỬ LÝ NHẠC
-                // Lấy tên bài hát đang chọn trong menu
-                const baiHatDuocChon = musicSelector.value;
-                audioPlayer.src = baiHatDuocChon; // Gán bài hát đó vào máy phát
-                audioPlayer.currentTime = 0;
-                audioPlayer.play().catch(e => console.log("Lỗi tự phát nhạc: ", e));
-
-                // 2. XỬ LÝ HÌNH ẢNH
+                // Hiện ảnh và pháo hoa
                 anhTien.src = this.dataset.img;
                 popup.style.display = 'flex';
                 banPhaoHoa();
@@ -163,8 +196,6 @@
 
         function dongPopup() {
             popup.style.display = 'none';
-            // Nếu muốn tắt nhạc khi đóng popup thì bỏ comment dòng dưới:
-            // audioPlayer.pause(); 
         }
 
         function banPhaoHoa() {
