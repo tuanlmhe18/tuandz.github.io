@@ -3,197 +3,233 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lì Xì Tết 2024</title>
+    <title>Lì Xì May Mắn 2026</title>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
-        /* CẤU HÌNH GIAO DIỆN */
+        /* 1. GIAO DIỆN CHUNG */
         body {
             font-family: 'Arial', sans-serif;
-            /* Hình nền Tết đẹp */
-            background: url('https://images.unsplash.com/photo-1613829704847-8b369ee90a33?q=80&w=2070&auto=format&fit=crop') no-repeat center center fixed;
-            background-size: cover;
+            background: linear-gradient(to bottom, #b30000, #800000); /* Màu đỏ đậm sang trọng */
             color: #fff;
             text-align: center;
-            margin: 0;
-            padding: 20px;
+            margin: 0; padding: 0;
             min-height: 100vh;
-        }
-        /* Lớp phủ mờ để làm nổi bật nội dung trên nền ảnh */
-        body::before {
-            content: ''; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(179, 0, 0, 0.7); /* Màu đỏ mờ */
-            z-index: -1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-x: hidden;
         }
 
         h1 {
-            margin-bottom: 10px;
+            color: #ffeb3b;
+            text-shadow: 0 0 10px #ff0000, 3px 3px 0 #000;
             font-size: 2.5rem;
-            text-shadow: 2px 2px 4px #000;
-            color: #ffcc00; /* Vàng kim */
+            margin-top: 30px;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            animation: nhapNhay 2s infinite;
         }
-        p { font-size: 1.2rem; text-shadow: 1px 1px 2px #000; }
+        
+        @keyframes nhapNhay {
+            0% { text-shadow: 0 0 10px #ff0000; }
+            50% { text-shadow: 0 0 30px #ffff00; }
+            100% { text-shadow: 0 0 10px #ff0000; }
+        }
 
-        /* Lưới 5 ô */
+        p { font-size: 1.2rem; margin-bottom: 30px; color: #ffccbc; }
+
+        /* 2. KHUNG CHỨA 5 BAO LÌ XÌ */
         .grid {
-            display: grid;
-            /* Tự động chia cột, tối đa 5 cột */
-            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
             gap: 20px;
             max-width: 800px;
-            margin: 40px auto;
+            padding: 20px;
         }
 
         .bao-li-xi {
-            background: linear-gradient(45deg, #ffcc00, #ffd700);
-            color: #b30000;
-            border: 3px solid #fff;
+            width: 130px;
+            height: 180px;
+            background: linear-gradient(135deg, #ffcc00, #ff9800);
+            border: 4px solid #fff;
             border-radius: 15px;
-            height: 140px;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            font-weight: bold;
-            font-size: 1.3rem;
-            transition: all 0.3s ease;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+            transition: transform 0.2s, background 0.3s;
             position: relative;
-            overflow: hidden;
-        }
-        
-        /* Hiệu ứng lấp lánh nhẹ khi di chuột */
-        .bao-li-xi:hover {
-            transform: translateY(-5px) scale(1.05);
-            box-shadow: 0 10px 20px rgba(255, 204, 0, 0.4);
         }
 
+        /* Chữ trên bao */
+        .bao-li-xi span {
+            font-size: 4rem;
+            margin-bottom: 10px;
+        }
+        .bao-li-xi div {
+            font-weight: bold;
+            color: #b71c1c;
+            font-size: 1.2rem;
+            text-transform: uppercase;
+        }
+
+        /* Hiệu ứng khi di chuột vào */
+        .bao-li-xi:hover { transform: scale(1.1) rotate(2deg); }
+
+        /* Trạng thái đã mở */
         .bao-li-xi.da-mo {
-            background: #fff;
-            color: #b30000;
+            background: #e0e0e0;
+            border-color: #999;
             cursor: default;
             transform: none;
-            box-shadow: none;
-            opacity: 0.8;
+            opacity: 0.7;
         }
+        .bao-li-xi.da-mo span { content: "✅"; font-size: 3rem; }
 
-        /* Popup kết quả */
-        .popup {
+        /* 3. POPUP KẾT QUẢ */
+        .overlay {
             position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.85);
+            background: rgba(0,0,0,0.9);
             display: none;
             align-items: center; justify-content: center;
-            z-index: 1000;
-            animation: fadeIn 0.3s;
+            z-index: 999;
+            animation: hienRa 0.3s;
         }
-        .popup-content {
-            background: linear-gradient(to bottom, #fff, #fff5cc);
-            padding: 30px;
+
+        .ket-qua-box {
+            background: #fff;
+            width: 90%;
+            max-width: 450px;
+            padding: 20px;
             border-radius: 20px;
+            border: 5px solid #ffcc00;
             text-align: center;
-            color: #b30000;
-            border: 4px solid #ffcc00;
-            box-shadow: 0 0 30px rgba(255, 204, 0, 0.5);
-            animation: zoomIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            max-width: 90%;
+            box-shadow: 0 0 50px rgba(255, 215, 0, 0.8);
+            animation: phongTo 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
-        .popup-content h2 { margin-top: 0; color: #d60000; }
-        
-        /* Ảnh tiền trong popup */
+
+        .ket-qua-box h2 { color: #d32f2f; margin: 0 0 15px 0; font-size: 2rem; }
+
+        /* Ảnh tiền */
         .anh-tien {
-            max-width: 100%;
+            width: 100%;
             height: auto;
-            max-height: 300px;
-            display: block;
-            margin: 20px auto;
             border-radius: 5px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            border: 2px solid #ddd;
+            margin-bottom: 20px;
         }
 
         button {
-            background: linear-gradient(to right, #d60000, #b30000);
-            color: white; border: none;
-            padding: 12px 30px; font-size: 1.1rem;
-            border-radius: 50px; cursor: pointer;
-            transition: transform 0.2s;
+            background: #d32f2f;
+            color: #fff;
+            border: none;
+            padding: 12px 30px;
+            font-size: 1.2rem;
+            border-radius: 50px;
+            cursor: pointer;
             font-weight: bold;
+            transition: 0.2s;
         }
-        button:hover { transform: scale(1.1); background: #ff0000; }
+        button:hover { background: #ff0000; transform: scale(1.1); }
 
-        @keyframes fadeIn { from {opacity: 0;} to {opacity: 1;} }
-        @keyframes zoomIn { from {transform: scale(0.5);} to {transform: scale(1);} }
+        /* Animation */
+        @keyframes hienRa { from {opacity: 0;} to {opacity: 1;} }
+        @keyframes phongTo { from {transform: scale(0.5);} to {transform: scale(1);} }
     </style>
 </head>
 <body>
 
-    <h1>🧧 Lộc Xuân Giáp Thìn 🧧</h1>
-    <p>Chọn một bao lì xì để nhận may mắn đầu năm!</p>
+    <h1>🧧 Lì Xì Tuanlm 🧧</h1>
+    <p>Chọn 1 bao để nhận lộc đầu năm nào!</p>
 
-    <div class="grid" id="khung"></div>
+    <div class="grid" id="khung-bao"></div>
 
-    <div class="popup" id="ketqua">
-        <div class="popup-content">
-            <h2>🎉 Chúc Mừng Năm Mới! 🎉</h2>
-            <p>Bạn đã nhận được lộc:</p>
-            <img id="anh-ket-qua" class="anh-tien" src="" alt="Tiền lì xì">
-            <button onclick="dong()">Nhận Lộc Ngay</button>
+    <div class="overlay" id="popup">
+        <div class="ket-qua-box">
+            <h2>🎉 CHÚC MỪNG! 🎉</h2>
+            <p style="color: #333; margin-bottom: 10px;">Bạn đã nhận được:</p>
+            <img src="" id="anh-tien-that" class="anh-tien" alt="Tiền trúng thưởng">
+            <button onclick="dongPopup()">Nhận Lộc</button>
         </div>
     </div>
 
     <script>
-        // CẤU HÌNH DANH SÁCH TIỀN VÀ LINK ẢNH THẬT
-        // (Bạn có thể thay link ảnh khác nếu muốn)
+       // 1. DANH SÁCH TIỀN (Dùng ảnh đã tải về máy)
         const danhSachTien = [
-            { giá_trị: "5k", hình_ảnh: "https://upload.wikimedia.org/wikipedia/vi/thumb/e/e5/5000_dong.jpg/640px-5000_dong.jpg" },
-            { giá_trị: "10k", hình_ảnh: "https://upload.wikimedia.org/wikipedia/vi/thumb/3/30/10000_dong.jpg/640px-10000_dong.jpg" },
-            { giá_trị: "20k", hình_ảnh: "https://upload.wikimedia.org/wikipedia/vi/thumb/9/95/20000_dong.jpg/640px-20000_dong.jpg" },
-            { giá_trị: "50k", hình_ảnh: "https://upload.wikimedia.org/wikipedia/vi/thumb/c/c9/50000_dong.jpg/640px-50000_dong.jpg" },
-            { giá_trị: "100k", hình_ảnh: "https://upload.wikimedia.org/wikipedia/vi/thumb/7/7c/100000_dong.jpg/640px-100000_dong.jpg" }
+            { menhGia: "5k", img: "./5k.jpg" },
+            { menhGia: "10k", img: "./10k.jpg" },
+            { menhGia: "20k", img: "./20k.jpg" },
+            { menhGia: "50k", img: "./50k.jpg" },
+            { menhGia: "100k", img: "./100k.jpg" }
         ];
 
-        // Hàm trộn ngẫu nhiên danh sách (Fisher-Yates shuffle)
-        function tronDanhSach(array) {
-            for (let i = array.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [array[i], array[j]] = [array[j], array[i]];
-            }
-            return array;
+        // 2. TRỘN VỊ TRÍ NGẪU NHIÊN
+        function tronMang(array) {
+            return array.sort(() => Math.random() - 0.5);
         }
 
-        // Trộn danh sách tiền trước khi tạo ô
-        const danhSachDaTron = tronDanhSach([...danhSachTien]);
-        const khung = document.getElementById('khung');
-        const popup = document.getElementById('ketqua');
-        const anhKetQua = document.getElementById('anh-ket-qua');
+        // Tạo 5 bao lì xì
+        const tienDaTron = tronMang([...danhSachTien]);
+        const khung = document.getElementById('khung-bao');
+        const popup = document.getElementById('popup');
+        const anhTien = document.getElementById('anh-tien-that');
 
-        // Tạo 5 ô lì xì
         for (let i = 0; i < 5; i++) {
             let bao = document.createElement('div');
             bao.className = 'bao-li-xi';
-            bao.innerText = "Lì Xì " + (i + 1);
             
-            // Gắn dữ liệu tiền đã trộn vào từng ô
-            bao.dataset.giatri = danhSachDaTron[i].giá_trị;
-            bao.dataset.hinhanh = danhSachDaTron[i].hình_ảnh;
+            // Nội dung bên ngoài bao
+            bao.innerHTML = `<span>🧧</span><div>Bao ${i + 1}</div>`;
 
+            // Lưu dữ liệu bí mật vào bao
+            bao.dataset.img = tienDaTron[i].img;
+
+            // Xử lý khi bấm vào
             bao.onclick = function() {
                 if (this.classList.contains('da-mo')) return;
-                
-                // Lấy thông tin từ ô được chọn
-                const giaTri = this.dataset.giatri;
-                const hinhAnh = this.dataset.hinhanh;
 
-                // Hiển thị lên popup
-                anhKetQua.src = hinhAnh;
+                // 1. Hiện ảnh tiền
+                anhTien.src = this.dataset.img;
                 popup.style.display = 'flex';
-                
-                // Đánh dấu đã mở
+
+                // 2. Bắn pháo hoa
+                banPhaoHoa();
+
+                // 3. Đổi trạng thái bao
                 this.classList.add('da-mo');
-                this.innerText = giaTri;
+                this.innerHTML = `<span>💰</span><div>Đã nhận</div>`;
             };
+
             khung.appendChild(bao);
         }
 
-        function dong() { popup.style.display = 'none'; }
-    </script>
+        function dongPopup() {
+            popup.style.display = 'none';
+        }
 
+        // 3. HÀM BẮN PHÁO HOA (Hiệu ứng)
+        function banPhaoHoa() {
+            var count = 200;
+            var defaults = {
+                origin: { y: 0.7 }
+            };
+
+            function fire(particleRatio, opts) {
+                confetti(Object.assign({}, defaults, opts, {
+                    particleCount: Math.floor(count * particleRatio)
+                }));
+            }
+
+            fire(0.25, { spread: 26, startVelocity: 55 });
+            fire(0.2, { spread: 60 });
+            fire(0.35, { spread: 100, decay: 0.91, scalar: 0.8 });
+            fire(0.1, { spread: 120, startVelocity: 25, decay: 0.92, scalar: 1.2 });
+            fire(0.1, { spread: 120, startVelocity: 45 });
+        }
+    </script>
 </body>
 </html>
