@@ -3,140 +3,86 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lì Xì May Mắn 2026</title>
+    <title>Lì Xì Tuấn Đẹp Trai 2026</title>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
-        /* 1. GIAO DIỆN CHUNG */
         body {
             font-family: 'Arial', sans-serif;
-            background: linear-gradient(to bottom, #b30000, #800000); /* Màu đỏ đậm sang trọng */
+            background: linear-gradient(to bottom, #b30000, #800000);
             color: #fff;
             text-align: center;
             margin: 0; padding: 0;
             min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+            display: flex; flex-direction: column; align-items: center;
             overflow-x: hidden;
         }
 
         h1 {
             color: #ffeb3b;
-            text-shadow: 0 0 10px #ff0000, 3px 3px 0 #000;
-            font-size: 2.5rem;
-            margin-top: 30px;
-            margin-bottom: 5px;
-            text-transform: uppercase;
-            animation: nhapNhay 2s infinite;
+            text-shadow: 2px 2px 0 #ff0000;
+            font-size: 2.2rem; margin-top: 20px; text-transform: uppercase;
+        }
+
+        /* KHUNG CHỌN NHẠC */
+        .music-control {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 10px 20px;
+            border-radius: 30px;
+            margin-bottom: 20px;
+            border: 1px solid #ffcc00;
+        }
+        .music-control label { font-weight: bold; margin-right: 10px; color: #ffcc00; }
+        .music-control select {
+            padding: 8px; border-radius: 20px; border: none;
+            background: #fff; color: #d32f2f; font-weight: bold; cursor: pointer;
         }
         
-        @keyframes nhapNhay {
-            0% { text-shadow: 0 0 10px #ff0000; }
-            50% { text-shadow: 0 0 30px #ffff00; }
-            100% { text-shadow: 0 0 10px #ff0000; }
-        }
-
-        p { font-size: 1.2rem; margin-bottom: 30px; color: #ffccbc; }
-
-        /* 2. KHUNG CHỨA 5 BAO LÌ XÌ */
         .grid {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 20px;
-            max-width: 800px;
-            padding: 20px;
+            display: flex; flex-wrap: wrap; justify-content: center;
+            gap: 20px; max-width: 800px; padding: 20px;
         }
 
         .bao-li-xi {
-            width: 130px;
-            height: 180px;
+            width: 130px; height: 180px;
             background: linear-gradient(135deg, #ffcc00, #ff9800);
-            border: 4px solid #fff;
-            border-radius: 15px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
+            border: 4px solid #fff; border-radius: 15px;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            cursor: pointer; position: relative;
             box-shadow: 0 10px 20px rgba(0,0,0,0.5);
-            transition: transform 0.2s, background 0.3s;
-            position: relative;
+            transition: transform 0.2s;
         }
-
-        /* Chữ trên bao */
-        .bao-li-xi span {
-            font-size: 4rem;
-            margin-bottom: 10px;
-        }
-        .bao-li-xi div {
-            font-weight: bold;
-            color: #b71c1c;
-            font-size: 1.2rem;
-            text-transform: uppercase;
-        }
-
-        /* Hiệu ứng khi di chuột vào */
-        .bao-li-xi:hover { transform: scale(1.1) rotate(2deg); }
-
-        /* Trạng thái đã mở */
+        .bao-li-xi:hover { transform: scale(1.1); }
         .bao-li-xi.da-mo {
-            background: #e0e0e0;
-            border-color: #999;
-            cursor: default;
-            transform: none;
-            opacity: 0.7;
+            background: #e0e0e0; opacity: 0.7; cursor: default; transform: none;
         }
-        .bao-li-xi.da-mo span { content: "✅"; font-size: 3rem; }
+        .bao-li-xi span { font-size: 3rem; margin-bottom: 5px; }
+        .bao-li-xi div { font-weight: bold; color: #b71c1c; text-transform: uppercase; }
 
-        /* 3. POPUP KẾT QUẢ */
+        /* Popup kết quả */
         .overlay {
             position: fixed; top: 0; left: 0; right: 0; bottom: 0;
             background: rgba(0,0,0,0.9);
-            display: none;
-            align-items: center; justify-content: center;
-            z-index: 999;
-            animation: hienRa 0.3s;
+            display: none; align-items: center; justify-content: center;
+            z-index: 999; animation: hienRa 0.3s;
         }
-
         .ket-qua-box {
-            background: #fff;
-            width: 90%;
-            max-width: 450px;
-            padding: 20px;
-            border-radius: 20px;
-            border: 5px solid #ffcc00;
-            text-align: center;
+            background: #fff; width: 90%; max-width: 450px;
+            padding: 20px; border-radius: 20px; border: 5px solid #ffcc00;
+            text-align: center; color: #d32f2f;
             box-shadow: 0 0 50px rgba(255, 215, 0, 0.8);
-            animation: phongTo 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            animation: phongTo 0.5s;
         }
-
-        .ket-qua-box h2 { color: #d32f2f; margin: 0 0 15px 0; font-size: 2rem; }
-
-        /* Ảnh tiền */
         .anh-tien {
-            width: 100%;
-            height: auto;
-            border-radius: 5px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-            border: 2px solid #ddd;
-            margin-bottom: 20px;
+            width: 100%; height: auto;
+            border-radius: 5px; margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3); border: 1px solid #ddd;
         }
-
         button {
-            background: #d32f2f;
-            color: #fff;
-            border: none;
-            padding: 12px 30px;
-            font-size: 1.2rem;
-            border-radius: 50px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: 0.2s;
+            background: #d32f2f; color: #fff; border: none;
+            padding: 12px 30px; font-size: 1.2rem; border-radius: 50px;
+            cursor: pointer; font-weight: bold;
         }
-        button:hover { background: #ff0000; transform: scale(1.1); }
 
-        /* Animation */
         @keyframes hienRa { from {opacity: 0;} to {opacity: 1;} }
         @keyframes phongTo { from {transform: scale(0.5);} to {transform: scale(1);} }
     </style>
@@ -144,21 +90,31 @@
 <body>
 
     <h1>🧧 Lì Xì Tuanlm 🧧</h1>
-    <p>Chọn 1 bao để nhận lộc đầu năm nào!</p>
+    
+    <div class="music-control">
+        <label>🎵 Chọn nhạc nền:</label>
+        <select id="chon-bai-hat">
+            <option value="./nhac1.mp3">Bài 1: Sôi Động 💃</option>
+            <option value="./nhac2.mp3">Bài 2: Nhẹ Nhàng 🌸</option>
+        </select>
+    </div>
+
+    <p>Chọn bao để nhận lộc + quẩy nhạc nào!</p>
 
     <div class="grid" id="khung-bao"></div>
 
     <div class="overlay" id="popup">
         <div class="ket-qua-box">
             <h2>🎉 CHÚC MỪNG! 🎉</h2>
-            <p style="color: #333; margin-bottom: 10px;">Bạn đã nhận được:</p>
             <img src="" id="anh-tien-that" class="anh-tien" alt="Tiền trúng thưởng">
             <button onclick="dongPopup()">Nhận Lộc</button>
         </div>
     </div>
 
+    <audio id="may-phat-nhac"></audio>
+
     <script>
-       // 1. DANH SÁCH TIỀN (Dùng ảnh đã tải về máy)
+        // CẤU HÌNH DANH SÁCH ẢNH TIỀN (Giữ nguyên file bạn đã tải)
         const danhSachTien = [
             { menhGia: "5k", img: "./5k.jpg" },
             { menhGia: "10k", img: "./10k.jpg" },
@@ -167,68 +123,52 @@
             { menhGia: "100k", img: "./100k.jpg" }
         ];
 
-        // 2. TRỘN VỊ TRÍ NGẪU NHIÊN
-        function tronMang(array) {
-            return array.sort(() => Math.random() - 0.5);
-        }
-
-        // Tạo 5 bao lì xì
+        function tronMang(array) { return array.sort(() => Math.random() - 0.5); }
+        
         const tienDaTron = tronMang([...danhSachTien]);
         const khung = document.getElementById('khung-bao');
         const popup = document.getElementById('popup');
         const anhTien = document.getElementById('anh-tien-that');
+        
+        // Lấy thẻ Audio và thẻ Chọn Bài Hát
+        const audioPlayer = document.getElementById('may-phat-nhac');
+        const musicSelector = document.getElementById('chon-bai-hat');
 
         for (let i = 0; i < 5; i++) {
             let bao = document.createElement('div');
             bao.className = 'bao-li-xi';
-            
-            // Nội dung bên ngoài bao
             bao.innerHTML = `<span>🧧</span><div>Bao ${i + 1}</div>`;
-
-            // Lưu dữ liệu bí mật vào bao
             bao.dataset.img = tienDaTron[i].img;
 
-            // Xử lý khi bấm vào
             bao.onclick = function() {
                 if (this.classList.contains('da-mo')) return;
 
-                // 1. Hiện ảnh tiền
+                // 1. XỬ LÝ NHẠC
+                // Lấy tên bài hát đang chọn trong menu
+                const baiHatDuocChon = musicSelector.value;
+                audioPlayer.src = baiHatDuocChon; // Gán bài hát đó vào máy phát
+                audioPlayer.currentTime = 0;
+                audioPlayer.play().catch(e => console.log("Lỗi tự phát nhạc: ", e));
+
+                // 2. XỬ LÝ HÌNH ẢNH
                 anhTien.src = this.dataset.img;
                 popup.style.display = 'flex';
-
-                // 2. Bắn pháo hoa
                 banPhaoHoa();
 
-                // 3. Đổi trạng thái bao
                 this.classList.add('da-mo');
                 this.innerHTML = `<span>💰</span><div>Đã nhận</div>`;
             };
-
             khung.appendChild(bao);
         }
 
         function dongPopup() {
             popup.style.display = 'none';
+            // Nếu muốn tắt nhạc khi đóng popup thì bỏ comment dòng dưới:
+            // audioPlayer.pause(); 
         }
 
-        // 3. HÀM BẮN PHÁO HOA (Hiệu ứng)
         function banPhaoHoa() {
-            var count = 200;
-            var defaults = {
-                origin: { y: 0.7 }
-            };
-
-            function fire(particleRatio, opts) {
-                confetti(Object.assign({}, defaults, opts, {
-                    particleCount: Math.floor(count * particleRatio)
-                }));
-            }
-
-            fire(0.25, { spread: 26, startVelocity: 55 });
-            fire(0.2, { spread: 60 });
-            fire(0.35, { spread: 100, decay: 0.91, scalar: 0.8 });
-            fire(0.1, { spread: 120, startVelocity: 25, decay: 0.92, scalar: 1.2 });
-            fire(0.1, { spread: 120, startVelocity: 45 });
+            confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
         }
     </script>
 </body>
