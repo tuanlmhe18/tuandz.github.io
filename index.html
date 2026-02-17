@@ -67,17 +67,32 @@
             z-index: 999; animation: hienRa 0.3s;
         }
         .ket-qua-box {
-            background: #fff; width: 90%; max-width: 450px;
+            background: #fff; width: 95%; max-width: 500px;
             padding: 20px; border-radius: 20px; border: 5px solid #ffcc00;
             text-align: center; color: #d32f2f;
             box-shadow: 0 0 50px rgba(255, 215, 0, 0.8);
             animation: phongTo 0.5s;
         }
-        .anh-tien {
-            width: 100%; height: auto;
-            border-radius: 5px; margin-bottom: 20px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3); border: 1px solid #ddd;
+        
+        /* KHUNG CHỨA NHIỀU TỜ TIỀN */
+        .container-tien {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap; /* Nếu nhiều quá thì xuống dòng */
+            gap: 10px;
+            margin-bottom: 20px;
+            min-height: 150px;
         }
+
+        .anh-tien {
+            max-width: 45%; /* Để 2 tờ có thể nằm cạnh nhau */
+            height: auto;
+            border-radius: 5px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3); border: 1px solid #ddd;
+            animation: roiXuong 0.5s ease-out;
+        }
+
         button {
             background: #d32f2f; color: #fff; border: none;
             padding: 12px 30px; font-size: 1.2rem; border-radius: 50px;
@@ -93,6 +108,7 @@
         @keyframes hienRa { from {opacity: 0;} to {opacity: 1;} }
         @keyframes phongTo { from {transform: scale(0.5);} to {transform: scale(1);} }
         @keyframes nhapNhay { 0% {opacity: 0.5;} 50% {opacity: 1;} 100% {opacity: 0.5;} }
+        @keyframes roiXuong { from {transform: translateY(-50px); opacity: 0;} to {transform: translateY(0); opacity: 1;} }
     </style>
 </head>
 <body>
@@ -115,7 +131,10 @@
     <div class="overlay" id="popup">
         <div class="ket-qua-box">
             <h2>🎉 CHÚC MỪNG! 🎉</h2>
-            <img src="" id="anh-tien-that" class="anh-tien" alt="Tiền trúng thưởng">
+            
+            <div id="khung-anh-tien" class="container-tien">
+                </div>
+
             <button onclick="dongPopup()">Nhận Lộc</button>
         </div>
     </div>
@@ -125,71 +144,96 @@
     </audio>
 
     <script>
-        // --- 1. CẤU HÌNH DATA ---
+        // --- 1. CẤU HÌNH DATA (QUAN TRỌNG) ---
+        // imgs: là danh sách các ảnh sẽ hiện ra
         const danhSachTien = [
-            { menhGia: "5k", img: "./5k.jpg" },
-            { menhGia: "10k", img: "./10k.jpg" },
-            { menhGia: "20k", img: "./20k.jpg" },
-            { menhGia: "50k", img: "./50k.jpg" },
-            { menhGia: "100k", img: "./100k.jpg" }
+            { 
+                menhGia: "20k", 
+                imgs: ["./20k.jpg"] 
+            },
+            { 
+                menhGia: "40k", 
+                imgs: ["./20k.jpg", "./20k.jpg"] // 2 tờ 20k
+            },
+            { 
+                menhGia: "50k", 
+                imgs: ["./50k.jpg"] 
+            },
+            { 
+                menhGia: "60k", 
+                imgs: ["./50k.jpg", "./10k.jpg"] // 1 tờ 50k + 1 tờ 10k
+            },
+            { 
+                menhGia: "100k", 
+                imgs: ["./100k.jpg"] 
+            }
         ];
 
-        // --- 2. XỬ LÝ ÂM THANH TỰ ĐỘNG ---
+        // --- 2. XỬ LÝ ÂM THANH ---
         const audio = document.getElementById('nhac-nen');
         const clickHint = document.getElementById('click-hint');
 
-        // Hàm thử phát nhạc
         function playMusic() {
             audio.play().then(() => {
-                // Nếu phát thành công -> Ẩn dòng nhắc nhở
                 clickHint.style.display = 'none';
             }).catch(() => {
-                // Nếu bị chặn -> Hiện dòng nhắc nhở
                 clickHint.style.display = 'block';
             });
         }
 
-        // Thử phát ngay khi web tải xong
         window.addEventListener('load', playMusic);
-
-        // Nếu bị chặn, chờ cú click đầu tiên để phát
         document.addEventListener('click', () => {
-            if (audio.paused) {
-                playMusic();
-            }
+            if (audio.paused) playMusic();
         });
 
-        // Hàm đổi bài hát khi chọn menu
         function doiBaiHat() {
             const select = document.getElementById('chon-bai-hat');
             audio.src = select.value;
-            playMusic(); // Phát bài mới ngay
+            playMusic();
         }
 
-        // --- 3. XỬ LÝ GAME LÌ XÌ ---
+        // --- 3. XỬ LÝ GAME ---
         function tronMang(array) { return array.sort(() => Math.random() - 0.5); }
         
+        // Trộn danh sách tiền
         const tienDaTron = tronMang([...danhSachTien]);
         const khung = document.getElementById('khung-bao');
         const popup = document.getElementById('popup');
-        const anhTien = document.getElementById('anh-tien-that');
+        const khungAnhTien = document.getElementById('khung-anh-tien');
 
         for (let i = 0; i < 5; i++) {
             let bao = document.createElement('div');
             bao.className = 'bao-li-xi';
             bao.innerHTML = `<span>🧧</span><div>Bao ${i + 1}</div>`;
-            bao.dataset.img = tienDaTron[i].img;
+            
+            // Lưu chỉ số index vào bao để lát truy xuất
+            bao.dataset.index = i;
 
             bao.onclick = function() {
                 if (this.classList.contains('da-mo')) return;
 
-                // Hiện ảnh và pháo hoa
-                anhTien.src = this.dataset.img;
+                // Lấy dữ liệu phần thưởng
+                const index = this.dataset.index;
+                const phanThuong = tienDaTron[index];
+
+                // Xóa ảnh cũ trong popup
+                khungAnhTien.innerHTML = '';
+
+                // Tạo các thẻ ảnh mới dựa trên danh sách ảnh
+                phanThuong.imgs.forEach(linkAnh => {
+                    const img = document.createElement('img');
+                    img.src = linkAnh;
+                    img.className = 'anh-tien';
+                    khungAnhTien.appendChild(img);
+                });
+
+                // Hiện popup & pháo hoa
                 popup.style.display = 'flex';
                 banPhaoHoa();
 
+                // Đánh dấu đã nhận
                 this.classList.add('da-mo');
-                this.innerHTML = `<span>💰</span><div>Đã nhận</div>`;
+                this.innerHTML = `<span>💰</span><div>${phanThuong.menhGia}</div>`;
             };
             khung.appendChild(bao);
         }
